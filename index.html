@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+        crossorigin="anonymous"></script>
+    <link rel="icon" href="static/images/itscFavicon.ico" type="image/x-icon">
+    <title>Workshop on Pedestrian Behavior Prediction</title>
+
+    <style>
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blinking-text {
+            animation: blink 2s linear infinite;
+        }
+
+        .navbar .nav-item .nav-link {
+            font-size: 1.2em;
+            color: white;
+            /* Adjust this value as needed */
+        }
+
+        /* CSS for the text outline */
+        .text-outline {
+            color: rgb(255, 255, 255);
+            /* Or any color; it's the color of the text */
+            text-shadow: 2px 2px 3px #050505
+        }
+
+        /* Optional: Makes the navbar semi-transparent */
+        .navbar {
+            background-color: rgba(49, 49, 49, 0.5);
+            /* Adjust the alpha for transparency */
+            height: 65px;
+            /* Or any other height */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 99;
+        }
+
+        /* Style for the background image container */
+        .background-image-container {
+            background-image: url('static/images/edmonton-backdrop.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 480px;
+            position: relative;
+        }
+
+        .background-image-container::after {
+            content: '';
+            /* Required for pseudo-elements */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.1);
+            /* Black tint with 50% opacity */
+            z-index: 1;
+            /* Ensures the tint is above the background image */
+            mix-blend-mode: multiply;
+        }
+
+        .container.text-center {
+            padding-top: 120px;
+            /* Adjust this value so the text doesn't hide behind the navbar */
+        }
+
+        .gradient-header {
+            /* Define a horizontal gradient background from blue to lightblue */
+            background: linear-gradient(to right, rgb(237, 246, 249), white);
+        }
+
+        #myBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            width: 50px;
+            /* Adjust size as needed */
+            height: 50px;
+            /* Same as width for a circle */
+            line-height: 50px;
+            /* Center the content vertically */
+            text-align: center;
+            /* Center the content horizontally */
+            border: none;
+            outline: none;
+            background-color: #007bff;
+            /* Bootstrap primary color */
+            color: white;
+            cursor: pointer;
+            padding: 0;
+            /* Remove padding */
+            border-radius: 50%;
+            /* Additional rounding, if needed */
+        }
+
+        #myBtn:hover {
+            background-color: #555;
+            /* Darker background on hover */
+        }
+
+        .navbar-collapse.collapsing,
+        .navbar-collapse.show {
+            background-color: #fff;
+            /* Change this to any color you prefer */
+        }
+
+        @media (max-width: 768px) {
+            h1.display-4 {
+                font-size: 1.3rem;
+                /* Smaller font size on smaller screens */
+            }
+
+            h2 {
+                font-size: 1.2rem;
+                /* Smaller font size on smaller screens */
+            }
+
+            .lead {
+                font-size: 1.1rem;
+                /* or whatever size you deem appropriate for mobile */
+            }
+        }
+
+        .card-title {
+        font-weight: bold;
+        }
+        .card-img-top {
+        max-width: 100%;
+        height: auto;
+        }
+        .card-text {
+        text-align: center;
+        font-weight: bold;
+        }
+    </style>
+
+    <script>
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+    </script>
+</head>
+
+<body>
+    <!-- <nav class="navbar navbar-expand-sm navbar-light fixed-top" style="background-color: rgba(0, 0, 0, 0.2);"> -->
+    <nav class="navbar navbar-expand-sm navbar-light">
+        <!-- <nav class="navbar navbar-expand-lg navbar-black fixed-top"> -->
+        <a class="navbar-brand" href="https://ieee-itsc.org/2024/">
+            <img src="static/images/ITSC2024-logo.png" alt="itsc2024 logo" height="65px" />
+        </a>
+        <!-- Toggler/collapsible Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav mx-auto">                
+                <!-- <li class="nav-item"> -->
+                    <!-- <a class="nav-link" href="cfp.html">Call for Papers</a> -->
+                <!-- </li> -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#topics">Topics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#organizers">Organizers</a>
+                </li>                
+                <li class="nav-item">
+                    <a class="nav-link" href="#schedule">Format</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#speakers">Speakers</a>
+                </li>
+            </ul>
+        </div>
+        <!-- ...rest of your navbar code... -->
+    </nav>
+    <div class="background-image-container">
+        <div class="container text-center text-outline">
+            <h1 class="display-4 font-weight-bold">4th Workshop On The Prediction Of Pedestrian Behaviors For Automated Driving</h1>
+            <h2>At 27th IEEE ITSC 2024</h2>
+            <p class="lead text-outline font-weight-bold">September 24-27, 2024, Edmonton, Canada</p>
+        </div>
+    </div>
+    <main class="container">
+        <!-- <main class="flex-fill"> -->
+        <h2 class="mt-4 gradient-header p-1">Important Information</h2>   
+        <p><strong>Date and Location: </strong> June 2, 2024, Jeju Shinhwa World, Jeju Island.</p>
+        <p><a href="https://ieee-itsc.org/2024/registration/">Workshop Registration Link</a></p>
+        <p><strong>Location: </strong>TBD</p>
+        <p><strong>Note: </strong>Place Award ceremony location here</p>
+        <h2 id="about" class="mt-4 gradient-header p-1">About</h2>
+        <p>With the progress of automated driving technologies, self-driving cars are driving safely on highways and freeways in most circumstances. However, the lack of safe and smooth interactions with pedestrians becomes one of the significant obstacles preventing fully autonomous vehicles in city streets. Protections of vulnerable road users like pedestrians are of the highest priority in traffic safety, and crashes with pedestrians will significantly impact the trust and public attitudes towards the new mobility technology. Disruptive interactions with pedestrians may also lower both the riding experiences and driving efficiency in the pedestrian-rich road environments. It is vital to understand pedestrians and make motion planning based on the predictions of their behaviors.</p>
+        <p>Besides pedestrian detection and tracking, many research efforts have been put into recognizing pedestrians' behaviors and predicting their trajectories in the past few years. The achievements can predict potential crashes and make motion-planning decisions accordingly in a longer duration. This workshop will focus on the detection, recognition, and prediction of pedestrian behaviors for automated driving cars to interact with them smoothly. The goal is to build a platform for sharing state-of-the-art models, algorithms, and datasets in the field and identifying research needs and directions.
+        </p>
+        <h2 id="topics" class="mt-4 gradient-header p-1">Topics of Interests:</h2>
+        <ul>
+            <li>Pedestrian trajectory prediction</li>
+            <li>Pedestrian intention estimation</li>
+            <li>Pedestrian behavior and action recognition</li>
+            <li>Vehicle-pedestrian interaction</li>
+        </ul>
+        <!-- <h2 id="format" class="mt-4 gradient-header p-1">Format</h2> -->
+        <div id="format" class="container mt-5">
+            <h2 id="schedule" class="mt-4 gradient-header p-1">Format</h2> 
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card text-center border-0">
+                  <img src="./static/images/competition.png" class="card-img-top mx-auto" style="width: 80%;" alt="Presentation of Competition Winners">
+                  <div class="card-body">
+                    <h5 class="card-title">Presentation of Competition Winners</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center border-0">
+                  <img src="./static/images/keynote_speakers.png" class="card-img-top mx-auto" style="width: 80%;" alt="Keynote Speakers">
+                  <div class="card-body">
+                    <h5 class="card-title">Keynote Speakers</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="card text-center border-0">
+                  <img src="./static/images/accepted_papers.png" class="card-img-top mx-auto" style="width: 80%;" alt="Accepted Papers">
+                  <div class="card-body">
+                    <h5 class="card-title">Accepted Papers</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>         
+        <h2 id="schedule" class="mt-4 gradient-header p-1">Tentative Agenda</h2>        
+        A full-day workshop with invited talks, panel discussions, and poster presentations will be held following the
+        schedule below:
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Activities</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-nowrap">8 am - 10 am</td>
+                    <td>Invited Talks</td>
+                    <td>4 speakers, each for 30 minutes, including talks and Q/A. Tentative Theme: Active trust
+                        calibration
+                        strategies for AI-Enabled Vehicle Systems</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">10am - 12 pm</td>
+                    <td>Accepted Paper Presentations</td>
+                    <td>4-5 papers that are accepted to the workshop will be invited for presentation. 20 minutes each
+                        talk.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">12 pm - 1:30 pm</td>
+                    <td>Mentorship luncheon</td>
+                    <td>Paired lunch for senior researchers (including the invited speakers and organizers) and PhD
+                        students or
+                        early-career researchers to share experiences and develop mentor-mentee relationships that can
+                        extend
+                        after the workshop. Mentor-mentee pairs will be established based on a survey filled out prior
+                        to the
+                        workshop.</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">1:30 pm - 3:00 pm</td>
+                    <td>Invited Talks</td>
+                    <td>3 speakers, each for 30 minutes, including talks and Q/A. Tentative Theme: Feedback and UI
+                        design for
+                        trust calibration</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">3:00 pm - 4:00 pm</td>
+                    <td>Panel Discussions</td>
+                    <td>All the invited speakers will answer any questions together from the workshop participants.</td>
+                </tr>
+                <tr>
+                    <td class="text-nowrap">4:00 pm - 5:00 pm</td>
+                    <td>Happy Hour</td>
+                    <td>Provide an opportunity for all participants to network and establish potential collaborations
+                        after the
+                        workshop</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="speakers" class="mt-4 gradient-header p-1">List of Speakers</h2>
+        <p>TBD</p>
+        <h2 id="organizers" class="mt-4 gradient-header p-1">Workshop Organizers</h2>
+        <div class="container mt-2">
+            <div class="row organizer">
+              <div class="col-md-3">
+                <img class="img-fluid" src="./static/images/rtian.png" alt="Renran Tian">
+              </div>
+              <div class="col-md-9">
+                <h3>Renran Tian</h3>
+                <h4>North Carolina State University</h4>
+                <p><a href="https://www.linkedin.com/in/renran-tian-3593b8104/">Website</a></p>
+                <p><strong>Short bio:</strong> Dr. Renran Tian is an assistant professor in the Department of Computer Information & Graphics Technology and the Transportation & Autonomous Systems Institute (TASI) at Indiana University-Purdue University Indianapolis (IUPUI). He received his Ph.D. degree from the School of Industrial Engineering at Purdue University –West Lafayette in 2013, and B.S. and M.S. in Mechanical Engineering from Tsinghua University – Beijing, China in 2002 and 2005. His research interests include human-centered computing, cognitive ergonomic, computational behavior analysis, human-AI interaction, and autonomous driving. He serves as the co-chair for Technical Activities Committee on Human Factors in Intelligent Transportation Systems (HFITS), IEEE Intelligent Transportation Systems Society.</p>
+              </div>
+            </div>
+          
+            <div class="row organizer mt-4">
+              <div class="col-md-3">
+                <img class="img-fluid" src="./static/images/zding.png" alt="Zhengming (Allan) Ding">
+              </div>
+              <div class="col-md-9">
+                <h3>Zhengming (Allan) Ding</h3>
+                <h4>Tulane University</h4>
+                <p><a href="https://www.cs.tulane.edu/~zding1/">Website</a></p>
+                <p><strong>Short bio:</strong> Dr. Ding is a Tenure-Track Assistant Professor at the Department of Computer Science, Tulane University. He is an active researcher in the fields of face recognition, transfer learning, multi-view learning, and has published over 50 articles in flagship conferences/journals and books. He serves as Associate Editor of IET Image Processing, and Journal of Electronic Imaging. He also serves many leading conferences/workshops in the vision and data mining fields, e.g., the Publicity Chair of AMFG2017, program co-chair of IEEE Big Data Workshop 2017, and workshop Chairs of AMFG 2021. He organizes four tutorials on multi-view learning in the FG 2017, CVPR 2018, IEEE BigData 2018, AAAI 2019 and IJCAI 2020. He also serves as senior program committee for AAAI 2019/2020, IJCAI 2021, and program committee for CVPR2018-2021, FG 2017-2019, and reviewers of many prestigious journals including IEEE TPAMI, TNNLS, TKDE, TIP, TMM.</p>
+              </div>
+            </div>
+
+            <div class="row organizer mt-4">
+                <div class="col-md-3">
+                  <img class="img-fluid" src="./static/images/ychen.jpg" alt="Yaobin Chen">
+                </div>
+                <div class="col-md-9">
+                  <h3>Yaobin Chen</h3>
+                  <h4>Purdue University</h4>
+                  <p><a href="https://engineering.purdue.edu/ECE/People/Faculty/ptProfile?resource_id=296665&group_id=2571">Website</a></p>
+                  <p><strong>Short bio:</strong> Dr. Yaobin Chen is a Chancellor’s Professor of electrical and computer engineering and the Founding Director of the Transportation and Autonomous Systems Institute (TASI) in the Purdue School of Engineering and Technology, IUPUI, Indianapolis, IN, U.S.A. He received his BS degree from Nanjing Institute of Technology, Nanjing, China in 1982, MS and Ph.D. degrees from Rensselaer Polytechnic Institute, Troy, New York, in 1986 and 1988 respectively, all in electrical engineering. From 1988 to 1990, Dr. Chen was a visiting assistant professor of electrical engineering at the George Washington University, Washington, DC. Since 1990, Dr. Chen has been with the Purdue School of Engineering and Technology, IUPUI, where he served as Associate Dean for Research from 2003 to 2005 and Chair of the Department of Electrical and Computer Engineering from 2005 to 2015. Dr. Chen’s areas of expertise include intelligent transportation systems, automated vehicles, EV and HEV, intelligent controls and robotics. He has published 190 technical papers in refereed journals and conference proceedings in his field of research. He is a co-inventor of 8 U.S. patents. He was a recipient of the National Science Foundation Research Initiation Award in 1991. He is a senior member of IEEE and a member of SAE.</p>
+                </div>
+              </div>            
+        </div>        
+    </main>
+    <!-- Footer -->
+    <footer class="bg-dark text-white-50 py-3 mt-2">
+        <div class="container text-center" style="padding-top: 50px;">
+            <small>&copy; 2023-24 All Rights Reserved by the Organizers.</small>
+        </div>
+    </footer>
+
+    <button onclick="topFunction()" id="myBtn" title="Go to top" class="btn btn-primary rounded-circle">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+</body>
+
+</html>
